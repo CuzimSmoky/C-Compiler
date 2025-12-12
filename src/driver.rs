@@ -1,20 +1,20 @@
 use std::env;
-use std::os::linux::raw::stat;
 use std::path::Path;
-use std::process::Command;
 use crate::parser;
 use crate::lexer;
 
 pub fn run() {
+    // Creating a vector containing all arguments passed to the compiler
     let args: Vec<String> = env::args().collect();
-    if args.len() < 2 {
+    if args.len() < 1 {
         eprint!("Error: not enough arguments. Please use cargo run ./mycc <path/to/file>");
     }
-
+    // Extracting the path to file from the env args
     let path_to_file_as_string: &str = &args[1];
     let path_to_file = Path::new(path_to_file_as_string);
     let preprocessed_file = path_to_file.with_extension("i");
 
+    // If additional args got passed match them to their corresponding usage
     if args.len() == 3 {
         let arg: &str = &args[2];
             match arg {
@@ -38,7 +38,7 @@ pub fn run() {
                 }
             }
     }
-    
+    // creating a .i file from the original .c file
     let preprocessing_status = std::process::Command::new("gcc")
         .args([
             "-E",
@@ -61,6 +61,7 @@ pub fn run() {
     let output_file = path_to_file.with_extension("");
     let output_file_as_string = output_file.to_str().unwrap();
 
+    // Turning te .i file into  assembly
     let assembling_status = std::process::Command::new("gcc")
         .args([
             assembled_file_path_as_string,
