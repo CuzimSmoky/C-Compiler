@@ -14,7 +14,7 @@ pub fn run(file_path: &Path) {
         let trimmed_string = file_content_string.trim_start();
         file_content_string = &file_content_string[file_content_string.len()-trimmed_string.len()..];
         if !file_content_string.is_empty() {
-            let (identifier, len) = search_identifier(file_content_string);
+            let (identifier, len) = search_token(file_content_string);
             token_vec.push(identifier);
             file_content_string = &file_content_string[len..];
             println!("Tokens: {:?}", token_vec);
@@ -25,7 +25,10 @@ pub fn run(file_path: &Path) {
     }
 }
 
-pub fn search_identifier(input: &str) -> (Token, usize){
+/**
+ * A function for reading an input &str and returning the found token
+ */
+pub fn search_token(input: &str) -> (Token, usize){
     let first_char = &input.chars().next().unwrap();
     match first_char {
         '(' => return (Token::LParen, 1),
@@ -36,7 +39,9 @@ pub fn search_identifier(input: &str) -> (Token, usize){
         _ => {
                 let regex_identifier = Regex::new(r"^[a-zA-Z_]\w*\b").unwrap();
                 let regex_constant:Regex = Regex::new(r"^[0-9]+\b").unwrap();
+
                 let is_identifier: bool = regex_identifier.is_match(&input);
+
                 let found_match;
                 let token: &str;
                 let matched_token: Token;
@@ -54,6 +59,9 @@ pub fn search_identifier(input: &str) -> (Token, usize){
         }
     }
 }
+/**
+ * A function to check if a found identifier relates to a keyword or actually is an identifier
+ */
 pub fn match_identifier(identifier: &str) -> Token {
     match identifier {
         "int" => return Token::KeywordInt,
@@ -65,10 +73,15 @@ pub fn match_identifier(identifier: &str) -> Token {
         }
     }
 }
+/**
+ * A function to return a found token as Token::Constant
+ */
 pub fn match_constant(identifier: &str) -> Token {
     let identifier_as_int = identifier.parse::<i64>().unwrap();
     return Token::Constant(identifier_as_int);
 }
+
+// Enum used for returning the Tokens
 #[derive(Debug)]
 pub enum Token {
     KeywordInt,
