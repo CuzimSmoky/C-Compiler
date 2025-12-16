@@ -1,8 +1,9 @@
 use std::fs;
 use std::path::Path;
 use regex::Regex;
+use crate::token::Token;
 
-pub fn run(file_path: &Path) {
+pub fn run(file_path: &Path) -> Vec<Token>{
     println!("Lexer is running");
     let mut token_vec: Vec<Token>  = Vec::new();
 
@@ -19,10 +20,11 @@ pub fn run(file_path: &Path) {
             file_content_string = &file_content_string[len..];
             println!("Tokens: {:?}", token_vec);
         } else {
-            println!("Finished leing the input successfully");
+            println!("Finished lexing the input successfully");
         }
 
     }
+    return token_vec;
 }
 
 /**
@@ -81,17 +83,3 @@ pub fn match_constant(identifier: &str) -> Token {
     return Token::Constant(identifier_as_int);
 }
 
-// Enum used for returning the Tokens
-#[derive(Debug)]
-pub enum Token {
-    KeywordInt,
-    KeywordVoid,
-    KeywordReturn,
-    Identifier(String),
-    Constant(i64),
-    LParen,
-    RParen,
-    LBrace,
-    RBrace,
-    Semicolon,
-}

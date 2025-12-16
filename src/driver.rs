@@ -23,13 +23,13 @@ pub fn run() {
                     std::process::exit(0);
                 }
                 "--parse" => {
-                    lexer::run(&path_to_file);
-                    parser::run();
+                    let mut tokens = lexer::run(&path_to_file);
+                    parser::run(&mut tokens);
                     std::process::exit(0);
                 }
                 "--codegen" => {
-                    lexer::run(&path_to_file); 
-                    parser::run();
+                    let mut tokens = lexer::run(&path_to_file);
+                    parser::run(&mut tokens);
                     std::process::exit(0);
                 }
                 _ => {
