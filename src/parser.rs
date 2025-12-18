@@ -1,11 +1,13 @@
 use std::{env::consts::EXE_SUFFIX, process::exit};
 
 use crate::{ lexer, token::{self, Token}};
+use crate::{ast::*};
 
-pub fn run(tokens: &mut Vec<Token>) {
+pub fn run(tokens: &mut Vec<Token>) -> Program{
     println!("Parser is running");
     let program  = parse_program(tokens);
     println!("AST: {:?}", program);
+    return program;
 }
 
 pub fn parse_program(tokens: &mut Vec<Token>) -> Program{
@@ -13,6 +15,7 @@ pub fn parse_program(tokens: &mut Vec<Token>) -> Program{
     let program = Program {
         function: function,
     };
+    println!("Finished parsing successfully");
     return program;
 }
 
@@ -81,26 +84,4 @@ pub fn expect(expected_token: &Token, tokens: &mut Vec<Token>) -> Token {
     }
 
     actual_token
-}
-
-#[derive(Debug)]
-pub struct Program {
-    pub function: Function,
-}
-#[derive(Debug)]
-pub struct Function {
-    pub name: Identifier,
-    pub body: Statement,
-}
-#[derive(Debug)]
-pub enum Statement {
-    Return(Expression),
-}
-#[derive(Debug)]
-pub enum Expression {
-    Constant(i64),
-}
-#[derive(Debug)]
-pub struct Identifier {
-    pub name: String,
 }

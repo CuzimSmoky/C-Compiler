@@ -2,6 +2,7 @@ use std::env;
 use std::path::Path;
 use crate::parser;
 use crate::lexer;
+use crate::codegen;
 
 pub fn run() {
     // Creating a vector containing all arguments passed to the compiler
@@ -24,12 +25,13 @@ pub fn run() {
                 }
                 "--parse" => {
                     let mut tokens = lexer::run(&path_to_file);
-                    parser::run(&mut tokens);
+                    let mut program = parser::run(&mut tokens);
                     std::process::exit(0);
                 }
                 "--codegen" => {
                     let mut tokens = lexer::run(&path_to_file);
-                    parser::run(&mut tokens);
+                    let mut program = parser::run(&mut tokens);
+                    codegen::run(program);
                     std::process::exit(0);
                 }
                 _ => {
